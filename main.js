@@ -97,6 +97,7 @@ reset.addEventListener("click", function () {
     p2Total = 0;
     tempScore = 0;
     player1Turn = true;
+    turn.innerHTML = "Player 1";
     changeBorder()
     document.getElementById("player-1").style.backgroundColor = "rgb(37, 12, 12)";
     document.getElementById("player-2").style.backgroundColor = "rgb(37, 12, 12)";
