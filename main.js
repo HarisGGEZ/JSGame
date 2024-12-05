@@ -12,6 +12,7 @@ let Hold = document.querySelector("#hold");
 let rolledInfo = document.querySelector("#roll");
 let turn = document.querySelector("#turn");
 let reset = document.querySelector("#reset");
+let playing = true;
 document.getElementById("player-1").style.border = "5px solid white"
 
 
@@ -25,35 +26,37 @@ function CastDie() {
 
 // Funktion för när "Roll Dice" knappen trycks. Kollar vilken spelares tur det är. Värdet tilldelas till current score.
 rollDice.addEventListener("click", function () {
-    let num = CastDie();
-    rolledInfo.innerHTML = "You rolled a " + num;
-    if (player1Turn) {
+    if (playing) {
+        let num = CastDie();
+        rolledInfo.innerHTML = "You rolled a " + num;
+        if (player1Turn) {
 
-        tempScore += num;
-        if (num != 1) {
-            p1Score.innerHTML = "Current: " + tempScore;
+            tempScore += num;
+            if (num != 1) {
+                p1Score.innerHTML = "Current: " + tempScore;
+            }
+            else {
+                player1Turn = false;
+                changeBorder()
+                turn.innerHTML = "Player 2";
+                tempScore = 0;
+                p1Score.innerHTML = "Current: " + tempScore;
+                num = null;
+            }
         }
-        else {
-            player1Turn = false;
-            changeBorder()
-            turn.innerHTML = "Player 2";
-            tempScore = 0;
-            p1Score.innerHTML = "Current: " + tempScore;
-            num = null;
-        }
-    }
-    if (!player1Turn) {
-        tempScore += num;
-        if (num != 1) {
-            p2Score.innerHTML = "Current: " + tempScore;
-        }
-        else {
-            player1Turn = true;
-            changeBorder()
-            turn.innerHTML = "Player 1";
-            tempScore = 0;
-            p2Score.innerHTML = "Current: " + tempScore;
-            num = null;
+        if (!player1Turn) {
+            tempScore += num;
+            if (num != 1) {
+                p2Score.innerHTML = "Current: " + tempScore;
+            }
+            else {
+                player1Turn = true;
+                changeBorder()
+                turn.innerHTML = "Player 1";
+                tempScore = 0;
+                p2Score.innerHTML = "Current: " + tempScore;
+                num = null;
+            }
         }
     }
 })
@@ -61,27 +64,29 @@ rollDice.addEventListener("click", function () {
 
 // Funktion för när "Hold" knappen trycks. Lägger till poängen till den totala poängen och kollar om den överstiger 50.
 Hold.addEventListener("click", function () {
-    if (player1Turn) {
-        p1Total += tempScore;
-        p1TotalScore.innerHTML = p1Total;
-        if (p1Total >= 50) win("player1");
-        tempScore = 0;
-        p1Score.innerHTML = "Current: " + tempScore;
-        player1Turn = false;
-        turn.innerHTML = "Player 2";
-        changeBorder()
-        return;
-    }
-    if (!player1Turn) {
-        p2Total += tempScore;
-        p2TotalScore.innerHTML = p2Total;
-        if (p2Total >= 50) win("player2");
-        tempScore = 0;
-        p2Score.innerHTML = "Current: " + tempScore;
-        player1Turn = true;
-        changeBorder()
-        turn.innerHTML = "Player 1";
-        return;
+    if (playing){
+        if (player1Turn) {
+            p1Total += tempScore;
+            p1TotalScore.innerHTML = p1Total;
+            if (p1Total >= 50) win("player1");
+            tempScore = 0;
+            p1Score.innerHTML = "Current: " + tempScore;
+            player1Turn = false;
+            turn.innerHTML = "Player 2";
+            changeBorder()
+            return;
+        }
+        if (!player1Turn) {
+            p2Total += tempScore;
+            p2TotalScore.innerHTML = p2Total;
+            if (p2Total >= 50) win("player2");
+            tempScore = 0;
+            p2Score.innerHTML = "Current: " + tempScore;
+            player1Turn = true;
+            changeBorder()
+            turn.innerHTML = "Player 1";
+            return;
+        }
     }
 })
 
@@ -93,6 +98,7 @@ reset.addEventListener("click", function () {
     p2Score.innerHTML = "Current: 0"
     p1TotalScore.innerHTML = 0;
     p2TotalScore.innerHTML = 0;
+    playing = true;
     p1Total = 0;
     p2Total = 0;
     tempScore = 0;
@@ -124,14 +130,14 @@ function changeBorder() {
 // Funktion som körs när någon vinner.
 function win(player) {
     if (player = "player1" && player != "player2") {
-        console.log("1")
         document.getElementById("player-1").style.backgroundColor = "white";
         document.getElementById("player-1").style.color = "black"
+        playing = false;
     }
     else if (player = "player2" && player != "player1") {
-        console.log("2")
         document.getElementById("player-2").style.backgroundColor = "white";
         document.getElementById("player-2").style.color = "black";
+        playing = false;
     }
 }
 
